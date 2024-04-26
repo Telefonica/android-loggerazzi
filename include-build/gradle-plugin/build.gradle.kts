@@ -11,10 +11,10 @@ java {
 
 dependencies {
     compileOnly(gradleApi())
-    compileOnly("com.android.tools.build:gradle:8.3.1")
-    compileOnly("com.android.tools.build:builder-test-api:8.3.1")
-    compileOnly("com.android.tools.ddms:ddmlib:31.2.2")
-    compileOnly("com.android.tools:common:31.2.2")
+    implementation("com.android.tools.build:gradle:8.3.1")
+    implementation("com.android.tools.build:builder-test-api:8.3.1")
+    implementation("com.android.tools.ddms:ddmlib:31.2.2")
+    implementation("com.android.tools:common:31.2.2")
 }
 
 gradlePlugin {
