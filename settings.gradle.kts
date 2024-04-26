@@ -15,10 +15,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "loggerazzi"
 include(":app")
-
-includeBuild("include-build") {
-    dependencySubstitution {
-        //substitute(module("com.telefonica.loggerazzi:gradle-plugin")).using(project(":gradle-plugin"))
-    }
-}
+includeBuild("include-build")
 include(":loggerazzi")

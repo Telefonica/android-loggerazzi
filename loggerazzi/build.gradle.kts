@@ -37,3 +37,5 @@ dependencies {
     implementation("junit:junit:4.13.2")
     implementation("androidx.test:monitor:1.6.1")
 }
+
+apply("${rootProject.projectDir}/mavencentral.gradle")

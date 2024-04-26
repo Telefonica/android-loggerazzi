@@ -25,3 +25,10 @@ gradlePlugin {
         }
     }
 }
+
+allprojects {
+    group = "com.telefonica.loggerazzi"
+    version = System.getProperty("LIBRARY_VERSION") ?: "undefined"
+}
+
+apply("${rootProject.projectDir}/mavencentral.gradle")

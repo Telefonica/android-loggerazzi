@@ -4,6 +4,12 @@ plugins {
     id("org.jetbrains.kotlin.android") version "1.9.22" apply false
     id("org.jetbrains.kotlin.jvm") version "1.9.22" apply false
     id("com.android.library") version "8.2.2" apply false
-    // Just for Gradle Build, included build will be applied
-    //id("com.telefonica.loggerazzi") version "1.0.0" apply false
+    id("io.github.gradle-nexus.publish-plugin") version "1.1.0" apply false
 }
+
+allprojects {
+    group = "com.telefonica.loggerazzi"
+    version = System.getProperty("LIBRARY_VERSION") ?: "undefined"
+}
+
+apply("${rootProject.projectDir}/publish_maven_central.gradle")
