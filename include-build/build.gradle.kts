@@ -13,3 +13,5 @@ allprojects {
         buildUponDefaultConfig = true
     }
 }
+
+apply("${rootProject.projectDir}/../publish_maven_central.gradle")
