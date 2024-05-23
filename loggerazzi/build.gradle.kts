@@ -1,16 +1,17 @@
 plugins {
-    id("com.android.library")
-    id("org.jetbrains.kotlin.android")
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin)
 }
 
 android {
     namespace = "com.telefonica.loggerazzi"
-    compileSdk = 34
+    compileSdk = libs.versions.compile.sdk.get().toInt()
+
 
     defaultConfig {
-        minSdk = 23
+        minSdk = libs.versions.min.sdk.get().toInt()
+        targetSdk = libs.versions.target.sdk.get().toInt()
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
 
@@ -33,9 +34,9 @@ android {
 }
 
 dependencies {
-    implementation("androidx.core:core-ktx:1.12.0")
-    implementation("junit:junit:4.13.2")
-    implementation("androidx.test:monitor:1.6.1")
+    implementation(libs.core.ktx)
+    implementation(libs.junit)
+    implementation(libs.androidx.test.monitor)
 }
 
 apply("${rootProject.projectDir}/mavencentral.gradle")

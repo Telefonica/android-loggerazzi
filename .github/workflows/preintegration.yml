@@ -1,0 +1,17 @@
+name: "Preintegration Checks"
+on:
+  pull_request:
+jobs:
+  tests:
+    runs-on: [ self-hosted-org, linux ]
+    container:
+      image: docker://docker.tuenti.io/android/novum_android:8
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: "Check Android Project"
+        run: './gradlew clean check assemble'
+
+      - name: "Check Gradle Plugin Project"
+        run: './gradlew -p include-build clean check jar'

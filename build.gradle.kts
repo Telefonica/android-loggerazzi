@@ -1,15 +1,24 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {
-    id("com.android.application") version "8.2.2" apply false
-    id("org.jetbrains.kotlin.android") version "1.9.22" apply false
-    id("org.jetbrains.kotlin.jvm") version "1.9.22" apply false
-    id("com.android.library") version "8.2.2" apply false
-    id("io.github.gradle-nexus.publish-plugin") version "1.1.0" apply false
+    alias(libs.plugins.android.application) apply false
+    alias(libs.plugins.android.library) apply false
+    alias(libs.plugins.kotlin) apply false
+    alias(libs.plugins.kotlin.jvm) apply false
+    alias(libs.plugins.publish)
+    alias(libs.plugins.detekt)
 }
 
 allprojects {
     group = "com.telefonica.loggerazzi"
     version = System.getProperty("LIBRARY_VERSION") ?: "undefined"
+
+    apply(plugin = rootProject.libs.plugins.detekt.get().pluginId)
+
+    detekt {
+        source.from(files(projectDir))
+        config.from(files("${rootProject.projectDir}/build-tools/detekt/detekt.yml"))
+        buildUponDefaultConfig = true
+    }
 }
 
 apply("${rootProject.projectDir}/publish_maven_central.gradle")

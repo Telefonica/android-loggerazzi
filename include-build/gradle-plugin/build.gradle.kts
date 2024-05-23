@@ -1,5 +1,5 @@
 plugins {
-    id("org.jetbrains.kotlin.jvm")
+    alias(libs.plugins.kotlin.jvm)
     id("java-gradle-plugin")
 }
 
@@ -11,10 +11,10 @@ java {
 
 dependencies {
     compileOnly(gradleApi())
-    implementation("com.android.tools.build:gradle:8.3.1")
-    implementation("com.android.tools.build:builder-test-api:8.3.1")
-    implementation("com.android.tools.ddms:ddmlib:31.2.2")
-    implementation("com.android.tools:common:31.2.2")
+    implementation(libs.android.gradle)
+    implementation(libs.android.builder.test.api)
+    implementation(libs.android.ddmlib)
+    implementation(libs.android.common)
 }
 
 gradlePlugin {
