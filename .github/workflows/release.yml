@@ -9,7 +9,7 @@ jobs:
       image: docker://docker.tuenti.io/android/novum_android:8
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Release library and plugin
         env:

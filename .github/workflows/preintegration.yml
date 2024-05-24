@@ -8,7 +8,7 @@ jobs:
       image: docker://docker.tuenti.io/android/novum_android:8
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: "Check Android Project"
         run: './gradlew clean check assemble'
