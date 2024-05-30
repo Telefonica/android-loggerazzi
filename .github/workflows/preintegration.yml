@@ -18,5 +18,5 @@ jobs:
           ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGPASSWORD }}
           ORG_GRADLE_PROJECT_signingKeyId: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGKEYID }}
         run: |
-          ./gradlew clean publishReleasePublicationToSonatypeRepository -DLIBRARY_VERSION=0.0.1 closeAndReleaseStagingRepository
-          ./gradlew -p include-build clean publishGradlePluginPublicationToSonatypeRepository -DLIBRARY_VERSION=0.0.1 closeAndReleaseStagingRepository
+          ./gradlew clean publishReleasePublicationToSonatypeRepository -DLIBRARY_VERSION=0.0.2 closeAndReleaseStagingRepository
+          ./gradlew -p include-build clean publishGradlePluginPublicationToSonatypeRepository -DLIBRARY_VERSION=0.0.2 closeAndReleaseStagingRepository
