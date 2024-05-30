@@ -1,3 +1,5 @@
+import java.time.Duration
+
 apply plugin: 'io.github.gradle-nexus.publish-plugin'
 
 nexusPublishing {
@@ -8,4 +10,5 @@ nexusPublishing {
             password = System.getenv("MOBILE_MAVENCENTRAL_PASSWORD")
         }
     }
+    clientTimeout = Duration.ofMinutes(60)
 }
