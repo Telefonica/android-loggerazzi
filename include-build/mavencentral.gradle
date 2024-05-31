@@ -59,9 +59,9 @@ publishing {
 afterEvaluate {
     tasks.getByName("publishGradlePluginPublicationToMavenLocal").dependsOn("jar")
     tasks.getByName("publishGradlePluginPublicationToSonatypeRepository").dependsOn("jar")
+    tasks.getByName("publishGradlePluginPublicationToMavenRepository").dependsOn("jar")
     tasks.getByName("signGradlePluginPublication").dependsOn("jar")
-    tasks.getByName("publishGradlePluginPublicationToMavenRepository").dependsOn("signPluginMavenPublication")
-    tasks.getByName("publishGradlePluginPublicationToSonatypeRepository").mustRunAfter("signPluginMavenPublication")
+    tasks.getByName("signPluginMavenPublication").dependsOn("jar")
 }
 
 
