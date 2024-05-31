@@ -18,4 +18,4 @@ jobs:
           ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGPASSWORD }}
           ORG_GRADLE_PROJECT_signingKeyId: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGKEYID }}
         run: |
-          cd include-build; ../gradlew :gradle-plugin:publishGradlePluginPublicationToSonatypeRepository -DLIBRARY_VERSION=0.0.4 closeAndReleaseStagingRepository
+          cd include-build; ../gradlew :gradle-plugin:publishGradlePluginPublicationToSonatypeRepository -DLIBRARY_VERSION=0.0.4 closeAndReleaseStagingRepository --info
