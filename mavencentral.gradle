@@ -11,6 +11,15 @@ apply plugin: 'maven-publish'
 apply plugin: 'signing'
 
 publishing {
+    repositories {
+        maven {
+            credentials {
+                username System.env.NEXUS_USER
+                password System.env.NEXUS_PASS
+            }
+            url "https://nexusng.tuenti.io/repository/maven-release-private/"
+        }
+    }
     publications {
         release(MavenPublication) {
             groupId 'com.telefonica'

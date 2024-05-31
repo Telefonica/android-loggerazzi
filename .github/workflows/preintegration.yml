@@ -17,5 +17,9 @@ jobs:
           ORG_GRADLE_PROJECT_signingKey: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGKEY }}
           ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGPASSWORD }}
           ORG_GRADLE_PROJECT_signingKeyId: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGKEYID }}
+          NEXUS_USER: ${{ secrets.NEXUS_USER }}
+          NEXUS_PASS: ${{ secrets.NEXUS_PASS }}
         run: |
-          cd include-build; ../gradlew :gradle-plugin:publishGradlePluginPublicationToSonatypeRepository -DLIBRARY_VERSION=0.0.4 closeAndReleaseStagingRepository --info
+          ./gradlew publish -DLIBRARY_VERSION=0.0.4
+          cd include-build
+          ../gradlew publish -DLIBRARY_VERSION=0.0.4
