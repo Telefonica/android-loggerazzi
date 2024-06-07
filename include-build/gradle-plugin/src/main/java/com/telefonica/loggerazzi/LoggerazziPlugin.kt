@@ -46,7 +46,7 @@ class LoggerazziPlugin @Inject constructor(
                 val recordedFiles = recordedFolderFile.listFiles()?.asList() ?: emptyList()
                 val report = LoggerazziReportConst.reportHtml.replace(
                     oldValue = "REPORT_TEMPLATE_BODY",
-                    newValue = getRecordedReport(recordedFiles)
+                    newValue = getRecordedReport(recordedFiles, reportsFolder.asFile)
                 )
                 writeText(report)
             }
@@ -64,7 +64,7 @@ class LoggerazziPlugin @Inject constructor(
                     }
                     val report = LoggerazziReportConst.reportHtml.replace(
                         oldValue = "REPORT_TEMPLATE_BODY",
-                        newValue = getFailuresReport(failuresEntries)
+                        newValue = getFailuresReport(failuresEntries, reportsFolder.asFile)
                     )
                     writeText(report)
                 }
