@@ -18,6 +18,9 @@ jobs:
           ORG_GRADLE_PROJECT_signingKey: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGKEY }}
           ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGPASSWORD }}
           ORG_GRADLE_PROJECT_signingKeyId: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGKEYID }}
+          NEXUS_USER: ${{ secrets.NEXUS_RELEASE_USER }}
+          NEXUS_PASS: ${{ secrets.NEXUS_RELEASE_PASSWORD }}
         run: |
-          ./gradlew clean publishReleasePublicationToSonatypeRepository -DLIBRARY_VERSION=${{ github.event.release.tag_name }} --max-workers 1 closeAndReleaseStagingRepository
-          ./gradlew -p include-build clean publishGradlePluginPublicationToSonatypeRepository -DLIBRARY_VERSION=${{ github.event.release.tag_name }} --max-workers 1 closeAndReleaseStagingRepository
+          ./gradlew publishReleasePublicationToMavenRepository -DLIBRARY_VERSION=${{ github.event.release.tag_name }}
+          cd include-build
+          ../gradlew publishGradlePluginPublicationToMavenRepository -DLIBRARY_VERSION=${{ github.event.release.tag_name }}
