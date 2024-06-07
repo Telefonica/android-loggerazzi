@@ -39,6 +39,9 @@ class LoggerazziPlugin @Inject constructor(
                 mkdirs()
                 deviceFileManager.pullFailuresLogs(absolutePath)
             }
+            val goldenForFailuresReportFolderFile = reportsFolder.dir("golden").asFile.apply {
+                mkdirs()
+            }
             val goldenFolderFile = File(getAbsoluteGoldenLogsSourcePath())
 
             File("${reportsFolder.asFile.absolutePath}/recorded.html").apply {
@@ -59,7 +62,12 @@ class LoggerazziPlugin @Inject constructor(
                         FailureEntry(
                             failure = failureFile,
                             recorded = File(recordedFolderFile, failureFile.name),
-                            golden = File(goldenFolderFile, failureFile.name)
+                            golden = File(goldenFolderFile, failureFile.name).let {
+                                it.copyTo(
+                                    File(goldenForFailuresReportFolderFile, it.name),
+                                    true
+                                )
+                            }
                         )
                     }
                     val report = LoggerazziReportConst.reportHtml.replace(
