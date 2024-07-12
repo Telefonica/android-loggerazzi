@@ -19,7 +19,8 @@ class LoggerazziPlugin @Inject constructor(
             project.tasks
                 .withType(DeviceProviderInstrumentTestTask::class.java)
                 .forEach { deviceProviderTask ->
-                    val beforeTaskName = "loggerazziBefore${deviceProviderTask.variantName}"
+                    val capitalizedVariant = deviceProviderTask.variantName.capitalizeFirstLetter()
+                    val beforeTaskName = "loggerazziBefore$capitalizedVariant"
                     project.tasks.register(beforeTaskName, Task::class.java) { task ->
                         task.doFirst {
                             deviceProviderTask.deviceFileManager().clearAllLogs()
@@ -27,7 +28,7 @@ class LoggerazziPlugin @Inject constructor(
                     }
                     deviceProviderTask.dependsOn(beforeTaskName)
 
-                    val afterTaskName = "loggerazziAfter${deviceProviderTask.variantName}"
+                    val afterTaskName = "loggerazziAfter$capitalizedVariant"
                     project.tasks.register(afterTaskName, Task::class.java) { task ->
                         task.doLast {
                             deviceProviderTask.afterExecution()
@@ -114,8 +115,12 @@ class LoggerazziPlugin @Inject constructor(
         val variantSourceFolder = this
             .variantName
             .replace("AndroidTest", "")
-            .replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
+            .capitalizeFirstLetter()
             .let { "androidTest$it" }
         return "${project.projectDir}/src/$variantSourceFolder/assets/loggerazzi-golden-files"
+    }
+
+    private fun String.capitalizeFirstLetter(): String {
+        return replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
     }
 }
