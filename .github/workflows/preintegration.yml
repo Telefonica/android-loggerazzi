@@ -15,4 +15,3 @@ jobs:
 
       - name: "Check Gradle Plugin Project"
         run: './gradlew -p include-build clean check jar'
-        
