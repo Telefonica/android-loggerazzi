@@ -2,6 +2,15 @@ apply plugin: 'maven-publish'
 apply plugin: 'signing'
 
 publishing {
+    repositories {
+        maven {
+            credentials {
+                username System.env.NEXUS_USER
+                password System.env.NEXUS_PASS
+            }
+            url "https://nexusng.tuenti.io/repository/maven-release-private/"
+        }
+    }
     publications {
         gradlePlugin(MavenPublication) {
             groupId 'com.telefonica'
@@ -49,6 +58,10 @@ publishing {
 
 afterEvaluate {
     tasks.getByName("publishGradlePluginPublicationToMavenLocal").dependsOn("jar")
+    tasks.getByName("publishGradlePluginPublicationToSonatypeRepository").dependsOn("jar")
+    tasks.getByName("publishGradlePluginPublicationToMavenRepository").dependsOn("jar")
+    tasks.getByName("signGradlePluginPublication").dependsOn("jar")
+    tasks.getByName("signPluginMavenPublication").dependsOn("jar")
 }
 
 

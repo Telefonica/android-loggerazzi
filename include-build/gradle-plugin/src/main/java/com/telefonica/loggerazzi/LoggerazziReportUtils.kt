@@ -4,6 +4,7 @@ import java.io.File
 
 fun getFailuresReport(
     failureEntries: List<FailureEntry>,
+    reportsDir: File,
 ): String {
     return buildString {
         append("<h3>Failures Report</h3>")
@@ -24,9 +25,9 @@ fun getFailuresReport(
         failureEntries.forEach { entry ->
             append("<tr class=\"row\">")
             append("<td class=\"$fileNameClass\" style=\"$fileNameStyle\">${entry.failure.name}</td>")
-            append("<td class=\"$imgClass\"><iframe $imgAttributes src=\"${entry.golden.absolutePath}\"></iframe></td>")
-            append("<td class=\"$imgClass\"><iframe $imgAttributes src=\"${entry.failure.absolutePath}\"></iframe></td>")
-            append("<td class=\"$imgClass\"><iframe $imgAttributes src=\"${entry.recorded.absolutePath}\"></iframe></td>")
+            append("<td class=\"$imgClass\"><iframe $imgAttributes src=\"${entry.golden.relativeTo(reportsDir)}\"></iframe></td>")
+            append("<td class=\"$imgClass\"><iframe $imgAttributes src=\"${entry.failure.relativeTo(reportsDir)}\"></iframe></td>")
+            append("<td class=\"$imgClass\"><iframe $imgAttributes src=\"${entry.recorded.relativeTo(reportsDir)}\"></iframe></td>")
             append("</tr>")
         }
         append("</tbody>")
@@ -36,6 +37,7 @@ fun getFailuresReport(
 
 fun getRecordedReport(
     recordedFiles: List<File>,
+    reportsDir: File,
 ): String {
     return buildString {
         append("<h3>Recorded Logs Report</h3>")
@@ -54,7 +56,7 @@ fun getRecordedReport(
         recordedFiles.forEach { recorded ->
             append("<tr class=\"row\">")
             append("<td class=\"$fileNameClass\" style=\"$fileNameStyle\">${recorded.name}</td>")
-            append("<td class=\"$imgClass\"><iframe $imgAttributes src=\"${recorded.absolutePath}\"></iframe></td>")
+            append("<td class=\"$imgClass\"><iframe $imgAttributes src=\"${recorded.relativeTo(reportsDir)}\"></iframe></td>")
             append("</tr>")
         }
         append("</tbody>")
