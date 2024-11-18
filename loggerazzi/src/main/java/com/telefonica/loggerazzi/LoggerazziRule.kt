@@ -61,7 +61,7 @@ open class GenericLoggerazziRule<LogType>(
                 InstrumentationRegistry.getInstrumentation().context.assets.open(
                     "loggerazzi-golden-files/$testName"
                 )
-            val goldenStringLogs = String(goldenFile.readBytes()).split("\n")
+            val goldenStringLogs = String(goldenFile.readBytes()).takeIf { it.isNotEmpty() }?.split("\n") ?: emptyList()
             val result = comparator.compare(recordedLogs, goldenStringLogs.map { stringMapper.toLog(it) })
             if (result != null) {
                 val compareFile = File(failuresDir, testName)
