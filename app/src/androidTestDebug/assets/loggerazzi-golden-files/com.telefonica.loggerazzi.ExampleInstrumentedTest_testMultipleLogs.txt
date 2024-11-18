@@ -1,0 +1,3 @@
+My first log
+My second log
+My third log

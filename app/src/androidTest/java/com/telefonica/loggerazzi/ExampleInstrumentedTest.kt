@@ -24,17 +24,20 @@ class ExampleInstrumentedTest {
     )
 
     @Test
-    fun test1() {
+    fun testSingleLog() {
         recorder.record("My log")
-        recorder.record("My log 2")
-        recorder.record("My log 3")
     }
 
     @Test
-    fun test2() {
+    fun testMultipleLogs() {
+        recorder.record("My first log")
         recorder.record("My second log")
-        recorder.record("My second logs 2")
-        recorder.record("My second log 3")
+        recorder.record("My third log")
+    }
+
+    @Test
+    fun testEmpty() {
+
     }
 }
 
