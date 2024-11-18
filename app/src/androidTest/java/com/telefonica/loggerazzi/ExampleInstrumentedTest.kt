@@ -37,7 +37,7 @@ class ExampleInstrumentedTest {
 
     @Test
     fun testEmpty() {
-
+        // Empty, just to test empty logs comparation.
     }
 }
 
