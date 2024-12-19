@@ -9,32 +9,20 @@ Logs snapshot testing for Android Instrumentation tests.
 
 ## Introduction
 
-Similarly to screenshot testing, which is an easy and mantenible approach to ensure your application UI does not get broken, loggerazzi brings the same "snapshoting" idea, but for your analytics or any other application logs.
+Similarly to screenshot testing, which is an easy and maintainable approach to ensure your application UI does not get broken, Loggerazzi brings the same "snapshoting" idea, but for your analytics or any other application logs.
 
 ## Usage
 
-You just need to include the loggerazzi plugin in yout project, and the rule in your test class (configuring it properly).
+You just need to include the Loggerazzi plugin in your project, and the rule in your test class (configuring it properly).
 
 In order to universally include all your existing application tests, rule can be added to your tests base class.
 
-To include the plugin, add plugin classpath to your project build.gradle buildscript dependencies block:
+To include the plugin, just include plugin into your application or library module build.gradle using the plugins DSL:
 
 ```gradle
-buildscript {
-    repositories {
-        ...
-        maven { url 'https://nexusng.tuenti.io/repository/maven-group/' }
-    }
-    dependencies {
-        classpath "com.telefonica:loggerazzi-gradle-plugin:$loggerazzi_version"
-    }
+plugins {
+  id("com.telefonica:loggerazzi-plugin") version $loggerazzi_version
 }
-```
-
-Then, include plugin at the beggining of your application or library module build.gradle:
-
-```gradle
-apply plugin: "com.telefonica.loggerazzi"
 ```
 
 Also, include the rule dependency in your application or library dependencies block:
@@ -63,7 +51,7 @@ For more details, check included [application example](app).
 
 ### Verification mode
 
-Regular `connectedXXXXAndroidTest` target invocation is enough for verifications against previosuly generated logs baselines. Android Studio executions should also work seamlessly.
+Regular `connectedXXXXAndroidTest` target invocation is enough for verifications against previously generated logs baselines. Android Studio executions should also work seamlessly.
 
 ```bash
 ./gradlew :app:connectedDebugAndroidTest
@@ -71,7 +59,7 @@ Regular `connectedXXXXAndroidTest` target invocation is enough for verifications
 
 In case of any failures due logs verifications, regular junit reports include failed tests and comparation failure reason.
 
-Additionally, an specific loggerazzi report is generated at --> `build/reports/androidTests/connected/debug/loggerazzi/failures.html`
+Additionally, an specific Loggerazzi report is generated at --> `build/reports/androidTests/connected/debug/loggerazzi/failures.html`
 
 ### Recording mode
 
@@ -105,7 +93,7 @@ project.afterEvaluate {
 
 ### Logs recorder
 
-Loggerazzi rule must be configured with a [LogsRecorder](loggerazzi/src/main/java/com/telefonica/loggerazzi/LogsRecorder.kt) implementation which will be used by loggerazzi to obtain logs recorded at the end of the test. This should be usually implemented as the replacement of the original application tracker in tests.
+Loggerazzi rule must be configured with a [LogsRecorder](loggerazzi/src/main/java/com/telefonica/loggerazzi/LogsRecorder.kt) implementation which will be used by Loggerazzi to obtain logs recorded at the end of the test. This should be usually implemented as the replacement of the original application tracker in tests.
 
 Example:
 
@@ -137,6 +125,6 @@ class FakeAnalyticsTracker : AnalyticsTracker, LogsRecorder<String> {
 
 ### Logs comparator
 
-By default, loggerazzi rule compares recorded logs by ensuring these are equal and in same order than the baseline logs.
+By default, Loggerazzi rule compares recorded logs by ensuring these are equal and in same order than the baseline logs.
 
 In case a different comparation mechanism is needed (such as ignoring the order of the events, or ignoring certain logs), you can implement an specific [LogComparator](loggerazzi/src/main/java/com/telefonica/loggerazzi/LogComparator.kt), which can be provided to the LoggerazziRule on its creation.

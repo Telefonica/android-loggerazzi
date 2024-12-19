@@ -20,8 +20,8 @@ dependencies {
 
 gradlePlugin {
     plugins {
-        create("loggerazzi") {
-            id = "com.telefonica.loggerazzi"
+        create("loggerazzi-plugin") {
+            id = "com.telefonica.loggerazzi-plugin"
             displayName = "Loggerazzi"
             description = "Logs snapshot testing for Android Instrumentation tests"
             implementationClass = "com.telefonica.loggerazzi.LoggerazziPlugin"
