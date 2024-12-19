@@ -4,7 +4,7 @@ common = "31.4.1"
 ddmlib = "31.4.1"
 kotlin = "1.9.23"
 detekt = "1.23.6"
-publish = "1.1.0"
+publish-plugin = "1.2.0"
 
 [libraries]
 android-builder-test-api = { module = "com.android.tools.build:builder-test-api", version.ref = "agp" }
@@ -15,4 +15,4 @@ android-gradle = { module = "com.android.tools.build:gradle", version.ref = "agp
 [plugins]
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
-publish = { id = "io.github.gradle-nexus.publish-plugin", version.ref = "publish" }
+publish-plugin = { id = "com.gradle.plugin-publish", version.ref = "publish-plugin" }

@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.kotlin.jvm)
     id("java-gradle-plugin")
+    alias(libs.plugins.publish.plugin)
 }
 
 java {
@@ -21,14 +22,12 @@ gradlePlugin {
     plugins {
         create("loggerazzi") {
             id = "com.telefonica.loggerazzi"
+            displayName = "Loggerazzi"
+            description = "Logs snapshot testing for Android Instrumentation tests"
             implementationClass = "com.telefonica.loggerazzi.LoggerazziPlugin"
+            website = "https://github.com/Telefonica/android-loggerazzi"
+            vcsUrl = "https://github.com/Telefonica/android-loggerazzi"
+            tags = listOf("android", "instrumentation", "testing", "logs")
         }
     }
 }
-
-allprojects {
-    group = "com.telefonica.loggerazzi"
-    version = System.getProperty("LIBRARY_VERSION") ?: "undefined"
-}
-
-apply("${rootProject.projectDir}/mavencentral.gradle")
