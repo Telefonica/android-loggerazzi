@@ -21,7 +21,7 @@ To include the plugin, just include plugin into your application or library modu
 
 ```gradle
 plugins {
-  id("com.telefonica:loggerazzi-plugin") version $loggerazzi_version
+  id("com.telefonica.loggerazzi-plugin") version $loggerazzi_version
 }
 ```
 
