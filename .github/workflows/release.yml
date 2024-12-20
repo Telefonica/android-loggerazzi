@@ -3,24 +3,31 @@ on:
   release:
     types: [published]
 jobs:
-  release:
-    runs-on: [ self-hosted-org, linux ]
-    container:
-      image: docker://docker.tuenti.io/android/novum_android:8
+  library:
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Release library and plugin
+      - name: Release library
         env:
           MOBILE_MAVENCENTRAL_USER: ${{ secrets.MOBILE_MAVENCENTRAL_USER }}
           MOBILE_MAVENCENTRAL_PASSWORD: ${{ secrets.MOBILE_MAVENCENTRAL_PASSWORD }}
           ORG_GRADLE_PROJECT_signingKey: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGKEY }}
           ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGPASSWORD }}
           ORG_GRADLE_PROJECT_signingKeyId: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGKEYID }}
-          NEXUS_USER: ${{ secrets.NEXUS_RELEASE_USER }}
-          NEXUS_PASS: ${{ secrets.NEXUS_RELEASE_PASSWORD }}
         run: |
-          ./gradlew publishReleasePublicationToMavenRepository -DLIBRARY_VERSION=${{ github.event.release.tag_name }}
+          ./gradlew publishReleasePublicationToSonatypeRepository -DLIBRARY_VERSION=${{ github.event.release.tag_name }} --max-workers 1 closeAndReleaseStagingRepository
+  plugin:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Release plugin
+        env:
+          GRADLE_PUBLISH_KEY: ${{ secrets.GRADLE_PUBLISH_KEY }}
+          GRADLE_PUBLISH_SECRET: ${{ secrets.GRADLE_PUBLISH_SECRET }}
+        run: |
           cd include-build
-          ../gradlew publishGradlePluginPublicationToMavenRepository -DLIBRARY_VERSION=${{ github.event.release.tag_name }}
+          ../gradlew publishPlugins -DLIBRARY_VERSION=${{ github.event.release.tag_name }}

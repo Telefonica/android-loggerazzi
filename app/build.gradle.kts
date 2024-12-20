@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin)
-    id("com.telefonica.loggerazzi")
+    id("com.telefonica.loggerazzi-plugin")
 }
 
 android {

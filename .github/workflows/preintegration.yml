@@ -1,11 +1,10 @@
 name: "Preintegration Checks"
 on:
   pull_request:
+  workflow_dispatch:
 jobs:
   tests:
-    runs-on: [ self-hosted-org, linux ]
-    container:
-      image: docker://docker.tuenti.io/android/novum_android:8
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
