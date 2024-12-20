@@ -4,9 +4,7 @@ on:
     types: [published]
 jobs:
   library:
-    runs-on: [ self-hosted-org, linux ]
-    container:
-      image: docker://docker.tuenti.io/android/novum_android:8
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -21,9 +19,7 @@ jobs:
         run: |
           ./gradlew publishReleasePublicationToSonatypeRepository -DLIBRARY_VERSION=${{ github.event.release.tag_name }} --max-workers 1 closeAndReleaseStagingRepository
   plugin:
-    runs-on: [ self-hosted-org, linux ]
-    container:
-      image: docker://docker.tuenti.io/android/novum_android:8
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
