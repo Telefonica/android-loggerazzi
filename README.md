@@ -17,11 +17,19 @@ You just need to include the Loggerazzi plugin in your project, and the rule in 
 
 In order to universally include all your existing application tests, rule can be added to your tests base class.
 
-To include the plugin, just include plugin into your application or library module build.gradle using the plugins DSL:
+To include the plugin, add it to the plugins block of your project's build.gradle:
 
 ```gradle
 plugins {
-  id("com.telefonica.loggerazzi-plugin") version $loggerazzi_version
+    ...
+    id("com.telefonica.loggerazzi-plugin") version $loggerazzi_version apply false
+}
+```
+Then, include it into your specific application or library build.gradle:
+```gradle
+plugins {
+    ...
+    id "com.telefonica.loggerazzi-plugin"
 }
 ```
 
