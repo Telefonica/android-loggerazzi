@@ -47,25 +47,24 @@ open class GenericLoggerazziRule<LogType>(
     override fun succeeded(description: Description?) {
         super.succeeded(description)
 
-        val testName = "${description?.className}_${description?.methodName}.txt"
+        val testName = "${description?.className}_${description?.methodName}"
+        val fileName = "${testName}.${System.nanoTime()}"
 
         val recordedLogs = recorder.getRecordedLogs()
         val log = recordedLogs.joinToString("\n") { stringMapper.fromLog(it) }
-        val testFile = File(recordedDir, testName)
-        testFile.delete()
+        val testFile = File(recordedDir, fileName)
         testFile.createNewFile()
         testFile.writeText(log)
 
         if (InstrumentationRegistry.getArguments().getString("record") != "true") {
             val goldenFile =
                 InstrumentationRegistry.getInstrumentation().context.assets.open(
-                    "loggerazzi-golden-files/$testName"
+                    "loggerazzi-golden-files/${testName}.txt"
                 )
             val goldenStringLogs = String(goldenFile.readBytes()).takeIf { it.isNotEmpty() }?.split("\n") ?: emptyList()
             val result = comparator.compare(recordedLogs, goldenStringLogs.map { stringMapper.toLog(it) })
             if (result != null) {
-                val compareFile = File(failuresDir, testName)
-                compareFile.delete()
+                val compareFile = File(failuresDir, fileName)
                 compareFile.createNewFile()
                 compareFile.writeText(result)
                 throw AssertionError("Logs do not match:\n$result")
