@@ -87,12 +87,6 @@ REPORT_TEMPLATE_BODY
     </div>
 </div>
 
-<div id="imageBottomSheet" class="modal bottom-sheet max-height">
-    <div class="modal-content center-align">
-        <img id="modalImage" src="" alt="">
-    </div>
-</div>
-
 <footer class="page-footer orange">
     <div class="container">
         <a class="us" href="https://github.com/Telefonica/loggerazzi" target="_blank"

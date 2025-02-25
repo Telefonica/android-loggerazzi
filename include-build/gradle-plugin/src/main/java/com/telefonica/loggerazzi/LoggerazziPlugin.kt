@@ -16,8 +16,15 @@ class LoggerazziPlugin @Inject constructor(
 
     override fun apply(project: Project) {
         project.afterEvaluate {
-            project.tasks
+
+            val deviceProviderInstrumentTestTasks = project.tasks
                 .withType(DeviceProviderInstrumentTestTask::class.java)
+
+            if (deviceProviderInstrumentTestTasks.isEmpty()) {
+                throw LoggerazziNoDeviceProviderInstrumentTestTasksException()
+            }
+
+            deviceProviderInstrumentTestTasks
                 .forEach { deviceProviderTask ->
                     val capitalizedVariant = deviceProviderTask.variantName.capitalizeFirstLetter()
                     val beforeTaskName = "loggerazziBefore$capitalizedVariant"
@@ -48,10 +55,12 @@ class LoggerazziPlugin @Inject constructor(
         val recordedFolderFile = reportsFolder.dir("recorded").asFile.apply {
             mkdirs()
             deviceFileManager.pullRecordedLogs(absolutePath)
+            processAndFilterResults()
         }
         val failuresFolderFile = reportsFolder.dir("failures").asFile.apply {
             mkdirs()
             deviceFileManager.pullFailuresLogs(absolutePath)
+            processAndFilterResults()
         }
         val goldenForFailuresReportFolderFile = reportsFolder.dir("golden").asFile.apply {
             mkdirs()
@@ -93,7 +102,7 @@ class LoggerazziPlugin @Inject constructor(
         } else {
             File(getAbsoluteGoldenLogsSourcePath()).apply {
                 mkdirs()
-                deviceFileManager.pullRecordedLogs(absolutePath)
+                recordedFolderFile.copyRecursively(this, true)
             }
         }
     }
@@ -122,5 +131,23 @@ class LoggerazziPlugin @Inject constructor(
 
     private fun String.capitalizeFirstLetter(): String {
         return replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
+    }
+
+    private fun File.processAndFilterResults() {
+        listFiles()
+            ?.groupBy {
+                it.name.substringBeforeLast(".")
+            }
+            ?.forEach { (key, filesGroup) ->
+                val lastFile = filesGroup.maxByOrNull {
+                    it.name.substringAfterLast(".").toLong()
+                }
+                filesGroup.forEach { file ->
+                    if (file != lastFile) {
+                        file.delete()
+                    }
+                }
+                lastFile?.renameTo(File(this, "$key.txt"))
+            }
     }
 }
