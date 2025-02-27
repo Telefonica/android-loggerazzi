@@ -45,6 +45,12 @@ class ExampleInstrumentedTest {
     fun testIgnoreLoggerazzi() {
         recorder.record("My log")
     }
+
+    @Test
+    @IgnoreLoggerazzi
+    fun testIgnoreLoggerazziWithoutGoldenFile() {
+        recorder.record("My log")
+    }
 }
 
 class FakeTestRecorder: LogsRecorder<String> {
