@@ -39,6 +39,12 @@ class ExampleInstrumentedTest {
     fun testEmpty() {
         // Empty, just to test empty logs comparation.
     }
+
+    @Test
+    @IgnoreLoggerazzi
+    fun testIgnoreLoggerazzi() {
+        recorder.record("My log")
+    }
 }
 
 class FakeTestRecorder: LogsRecorder<String> {
