@@ -9,7 +9,7 @@ import java.io.File
 class LoggerazziRule(
     recorder: LogsRecorder<String>,
     comparator: LogComparator<String> = DefaultLogComparator(),
-): GenericLoggerazziRule<String>(
+) : GenericLoggerazziRule<String>(
     recorder = recorder,
     stringMapper = object : StringMapper<String> {
         override fun fromLog(log: String): String = log
@@ -17,6 +17,7 @@ class LoggerazziRule(
     },
     comparator = comparator,
 )
+
 open class GenericLoggerazziRule<LogType>(
     val recorder: LogsRecorder<LogType>,
     private val stringMapper: StringMapper<LogType>,
@@ -47,6 +48,8 @@ open class GenericLoggerazziRule<LogType>(
     override fun succeeded(description: Description?) {
         super.succeeded(description)
 
+        val isTestIgnored = description?.getAnnotation(IgnoreLoggerazzi::class.java) != null
+
         val testName = "${description?.className}_${description?.methodName}"
         val fileName = "${testName}.${System.nanoTime()}"
 
@@ -56,7 +59,7 @@ open class GenericLoggerazziRule<LogType>(
         testFile.createNewFile()
         testFile.writeText(log)
 
-        if (InstrumentationRegistry.getArguments().getString("record") != "true") {
+        if (InstrumentationRegistry.getArguments().getString("record") != "true" && !isTestIgnored) {
             val goldenFile =
                 InstrumentationRegistry.getInstrumentation().context.assets.open(
                     "loggerazzi-golden-files/${testName}.txt"

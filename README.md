@@ -136,3 +136,6 @@ class FakeAnalyticsTracker : AnalyticsTracker, LogsRecorder<String> {
 By default, Loggerazzi rule compares recorded logs by ensuring these are equal and in same order than the baseline logs.
 
 In case a different comparation mechanism is needed (such as ignoring the order of the events, or ignoring certain logs), you can implement an specific [LogComparator](loggerazzi/src/main/java/com/telefonica/loggerazzi/LogComparator.kt), which can be provided to the LoggerazziRule on its creation.
+
+### Ignore a test
+If you want to ignore a test from Loggerazzi verification, you can use the `@IgnoreLoggerazzi` annotation in your test.
