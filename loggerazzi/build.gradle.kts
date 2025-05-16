@@ -10,9 +10,12 @@ android {
 
     defaultConfig {
         minSdk = libs.versions.min.sdk.get().toInt()
-        targetSdk = libs.versions.target.sdk.get().toInt()
 
         consumerProguardFiles("consumer-rules.pro")
+    }
+
+    testOptions {
+        targetSdk = libs.versions.target.sdk.get().toInt()
     }
 
     buildTypes {
