@@ -60,14 +60,14 @@ open class GenericLoggerazziRule<LogType>(
                     "loggerazzi-golden-files/${testName}.txt"
                 )
             val goldenStringLogs = String(goldenFile.readBytes()).takeIf { it.isNotEmpty() }?.split("\n") ?: emptyList()
-            val comparationResult = compare(goldenStringLogs)
-            if (!comparationResult.success) {
+            val comparison = compare(goldenStringLogs)
+            if (!comparison.success) {
                 val compareFile = File(failuresDir, fileName)
                 compareFile.createNewFile()
-                compareFile.writeText(comparationResult.result!!)
-                throw AssertionError("Logs do not match:\n${comparationResult.result}")
+                compareFile.writeText(comparison.result!!)
+                throw AssertionError("Logs do not match:\n${comparison.result}")
             }
-            recordedLogs = comparationResult.recordedLogs
+            recordedLogs = comparison.recordedLogs
         } else {
             recordedLogs = recorder.getRecordedLogs()
         }
@@ -78,21 +78,21 @@ open class GenericLoggerazziRule<LogType>(
         testFile.writeText(log)
     }
 
-    private fun compare(goldenStringLogs: List<String>): ComparationResult<LogType> {
+    private fun compare(goldenStringLogs: List<String>): Comparison<LogType> {
         val startTime = System.currentTimeMillis()
-        var comparationResult: ComparationResult<LogType>
+        var comparison: Comparison<LogType>
         do {
             val recordedLogs = recorder.getRecordedLogs()
             val result = comparator.compare(recordedLogs, goldenStringLogs.map { stringMapper.toLog(it) })
-            comparationResult = ComparationResult(result, recordedLogs)
-            if (!comparationResult.success) {
+            comparison = Comparison(result, recordedLogs)
+            if (!comparison.success) {
                 Thread.sleep(RESULT_POLLING_INTERVAL_MS)
             }
-        } while (!comparationResult.success && System.currentTimeMillis() - startTime < RESULT_TIMEOUT_MS)
-        return comparationResult
+        } while (!comparison.success && System.currentTimeMillis() - startTime < RESULT_TIMEOUT_MS)
+        return comparison
     }
 
-    private data class ComparationResult<LogType>(
+    private data class Comparison<LogType>(
         val result: String?,
         val recordedLogs: List<LogType>,
     ) {
