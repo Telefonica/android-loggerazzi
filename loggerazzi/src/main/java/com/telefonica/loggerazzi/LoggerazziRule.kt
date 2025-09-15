@@ -53,25 +53,55 @@ open class GenericLoggerazziRule<LogType>(
         val testName = "${description?.className}_${description?.methodName}"
         val fileName = "${testName}.${System.nanoTime()}"
 
-        val recordedLogs = recorder.getRecordedLogs()
-        val log = recordedLogs.joinToString("\n") { stringMapper.fromLog(it) }
-        val testFile = File(recordedDir, fileName)
-        testFile.createNewFile()
-        testFile.writeText(log)
-
+        val recordedLogs: List<LogType>
         if (InstrumentationRegistry.getArguments().getString("record") != "true" && !isTestIgnored) {
             val goldenFile =
                 InstrumentationRegistry.getInstrumentation().context.assets.open(
                     "loggerazzi-golden-files/${testName}.txt"
                 )
             val goldenStringLogs = String(goldenFile.readBytes()).takeIf { it.isNotEmpty() }?.split("\n") ?: emptyList()
-            val result = comparator.compare(recordedLogs, goldenStringLogs.map { stringMapper.toLog(it) })
-            if (result != null) {
+            val comparationResult = compare(goldenStringLogs)
+            if (!comparationResult.success) {
                 val compareFile = File(failuresDir, fileName)
                 compareFile.createNewFile()
-                compareFile.writeText(result)
-                throw AssertionError("Logs do not match:\n$result")
+                compareFile.writeText(comparationResult.result!!)
+                throw AssertionError("Logs do not match:\n${comparationResult.result}")
             }
+            recordedLogs = comparationResult.recordedLogs
+        } else {
+            recordedLogs = recorder.getRecordedLogs()
         }
+
+        val log = recordedLogs.joinToString("\n") { stringMapper.fromLog(it) }
+        val testFile = File(recordedDir, fileName)
+        testFile.createNewFile()
+        testFile.writeText(log)
+    }
+
+    private fun compare(goldenStringLogs: List<String>): ComparationResult<LogType> {
+        val startTime = System.currentTimeMillis()
+        var comparationResult: ComparationResult<LogType>
+        do {
+            val recordedLogs = recorder.getRecordedLogs()
+            val result = comparator.compare(recordedLogs, goldenStringLogs.map { stringMapper.toLog(it) })
+            comparationResult = ComparationResult(result, recordedLogs)
+            if (!comparationResult.success) {
+                Thread.sleep(RESULT_POLLING_INTERVAL_MS)
+            }
+        } while (!comparationResult.success && System.currentTimeMillis() - startTime < RESULT_TIMEOUT_MS)
+        return comparationResult
+    }
+
+    private data class ComparationResult<LogType>(
+        val result: String?,
+        val recordedLogs: List<LogType>,
+    ) {
+        val success: Boolean
+            get() = result == null
+    }
+
+    private companion object {
+        const val RESULT_POLLING_INTERVAL_MS = 500L
+        const val RESULT_TIMEOUT_MS = 5000L
     }
 }
