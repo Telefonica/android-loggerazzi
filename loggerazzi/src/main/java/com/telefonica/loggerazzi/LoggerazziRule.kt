@@ -64,8 +64,8 @@ open class GenericLoggerazziRule<LogType>(
             if (!comparison.success) {
                 val compareFile = File(failuresDir, fileName)
                 compareFile.createNewFile()
-                compareFile.writeText(comparison.result!!)
-                throw AssertionError("Logs do not match:\n${comparison.result}")
+                compareFile.writeText(comparison.failure!!)
+                throw AssertionError("Logs do not match:\n${comparison.failure}")
             }
             recordedLogs = comparison.recordedLogs
         } else {
@@ -79,12 +79,13 @@ open class GenericLoggerazziRule<LogType>(
     }
 
     private fun compare(goldenStringLogs: List<String>): Comparison<LogType> {
+        val goldenLogs = goldenStringLogs.map { stringMapper.toLog(it) }
         val startTime = System.currentTimeMillis()
         var comparison: Comparison<LogType>
         do {
             val recordedLogs = recorder.getRecordedLogs()
-            val result = comparator.compare(recordedLogs, goldenStringLogs.map { stringMapper.toLog(it) })
-            comparison = Comparison(result, recordedLogs)
+            val comparisonFailure = comparator.compare(recordedLogs, goldenLogs)
+            comparison = Comparison(comparisonFailure, recordedLogs)
             if (!comparison.success) {
                 Thread.sleep(RESULT_POLLING_INTERVAL_MS)
             }
@@ -93,11 +94,11 @@ open class GenericLoggerazziRule<LogType>(
     }
 
     private data class Comparison<LogType>(
-        val result: String?,
+        val failure: String?,
         val recordedLogs: List<LogType>,
     ) {
         val success: Boolean
-            get() = result == null
+            get() = failure == null
     }
 
     private companion object {
