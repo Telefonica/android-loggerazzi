@@ -65,6 +65,8 @@ Regular `connectedXXXXAndroidTest` target invocation is enough for verifications
 ./gradlew :app:connectedDebugAndroidTest
 ```
 
+At the end of each test, Loggerazzi compares the recorded logs with the corresponding baseline logs (previously generated in recording mode) allowing up to 5 seconds for the logs to match the expected output.
+
 In case of any failures due logs verifications, regular junit reports include failed tests and comparation failure reason.
 
 Additionally, an specific Loggerazzi report is generated at --> `build/reports/androidTests/connected/debug/loggerazzi/failures.html`
