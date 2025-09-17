@@ -9,7 +9,7 @@ interface LogComparator<LogType> {
 class DefaultLogComparator<LogType> : LogComparator<LogType> {
     override fun compare(recorded: List<LogType>, golden: List<LogType>): String? {
         if (recorded.size != golden.size) {
-            return "Different number of lines: recorded=${recorded.size}, golden=${golden.size}"
+            return "Different number of lines: golden=${golden.size}, recorded=${recorded.size}"
         }
 
         val compareResult = StringBuilder()
