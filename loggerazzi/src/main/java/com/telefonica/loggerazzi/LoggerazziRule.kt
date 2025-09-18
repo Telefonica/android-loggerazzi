@@ -68,7 +68,7 @@ open class GenericLoggerazziRule<LogType>(
                 throw AssertionError("Logs do not match:\n${comparison.failure}")
             }
         } else {
-            writeRecordedLogsToFile(fileName,recorder.getRecordedLogs())
+            writeRecordedLogsToFile(fileName, recorder.getRecordedLogs())
         }
     }
 
