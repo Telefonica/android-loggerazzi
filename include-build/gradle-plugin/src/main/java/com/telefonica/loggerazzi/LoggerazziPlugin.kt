@@ -55,13 +55,12 @@ class LoggerazziPlugin @Inject constructor(
         val recordedFolderFile = reportsFolder.dir("recorded").asFile.apply {
             mkdirs()
             deviceFileManager.pullRecordedLogs(absolutePath)
-            processAndFilterResults()
         }
         val failuresFolderFile = reportsFolder.dir("failures").asFile.apply {
             mkdirs()
             deviceFileManager.pullFailuresLogs(absolutePath)
-            processAndFilterResults()
         }
+        filterRecordedAndFailureResults(recordedFolderFile, failuresFolderFile)
         val goldenForFailuresReportFolderFile = reportsFolder.dir("golden").asFile.apply {
             mkdirs()
         }
@@ -133,21 +132,28 @@ class LoggerazziPlugin @Inject constructor(
         return replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
     }
 
-    private fun File.processAndFilterResults() {
-        listFiles()
+    private fun filterRecordedAndFailureResults(recordedDir: File, failuresDir: File) {
+        recordedDir.listFiles()
             ?.groupBy {
                 it.name.substringBeforeLast(".")
             }
             ?.forEach { (key, filesGroup) ->
-                val lastFile = filesGroup.maxByOrNull {
+                val lastRecordedFile = filesGroup.maxByOrNull {
                     it.name.substringAfterLast(".").toLong()
                 }
                 filesGroup.forEach { file ->
-                    if (file != lastFile) {
+                    if (file != lastRecordedFile) {
                         file.delete()
+                        File(failuresDir, file.name).takeIf { it.exists() }?.delete()
                     }
                 }
-                lastFile?.renameTo(File(this, "$key.txt"))
+                if (lastRecordedFile != null) {
+                    lastRecordedFile
+                        .renameTo(File(recordedDir, "$key.txt"))
+                    File(failuresDir, lastRecordedFile.name)
+                        .takeIf { it.exists() }
+                        ?.renameTo(File(failuresDir, "$key.txt"))
+                }
             }
     }
 }
