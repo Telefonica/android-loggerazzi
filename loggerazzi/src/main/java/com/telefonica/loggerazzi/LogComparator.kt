@@ -26,8 +26,11 @@ class DefaultLogComparator<LogType> : LogComparator<LogType> {
 @Suppress("unused")
 class AnyOrderLogComparator<LogType> : LogComparator<LogType> {
     override fun compare(recorded: List<LogType>, golden: List<LogType>): String? {
-        val missing = findDifference(golden, recorded)
-        val extra = findDifference(recorded, golden)
+        val goldenSet = golden.toSet()
+        val recordedSet = recorded.toSet()
+
+        val missing = goldenSet - recordedSet
+        val extra = recordedSet - goldenSet
 
         if (missing.isEmpty() && extra.isEmpty()) {
             return null
@@ -35,16 +38,12 @@ class AnyOrderLogComparator<LogType> : LogComparator<LogType> {
 
         val result = StringBuilder()
         if (missing.isNotEmpty()) {
-            result.appendLine("Missing entries (in golden but not in recorded): $missing")
+            result.appendLine("Missing entries (in golden but not in recorded): ${missing.toList()}")
         }
         if (extra.isNotEmpty()) {
-            result.appendLine("Extra entries (in recorded but not in golden): $extra")
+            result.appendLine("Extra entries (in recorded but not in golden): ${extra.toList()}")
         }
 
         return result.toString().trimEnd()
-    }
-
-    private fun findDifference(first: List<LogType>, second: List<LogType>): List<LogType> {
-        return first.toMutableList().apply { removeAll(second) }
     }
 }
