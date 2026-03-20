@@ -7,11 +7,17 @@
 
 Logs snapshot testing for Android Instrumentation tests.
 
+> [!IMPORTANT]
+> Loggerazzi has evolved into [Android Snaptesting](https://github.com/Telefonica/android-snaptesting), which is now the recommended library for new projects.
+> This repository remains available for existing integrations and historical reference.
+
 ## Introduction
 
 Similarly to screenshot testing, which is an easy and maintainable approach to ensure your application UI does not get broken, Loggerazzi brings the same "snapshoting" idea, but for your analytics or any other application logs.
 
 ## Usage
+
+For new integrations, use [Android Snaptesting](https://github.com/Telefonica/android-snaptesting) instead of Loggerazzi.
 
 You just need to include the Loggerazzi plugin in your project, and the rule in your test class (configuring it properly).
 
